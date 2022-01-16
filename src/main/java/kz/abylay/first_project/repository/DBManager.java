@@ -48,6 +48,7 @@ public class DBManager {
     }
 
     public static void addPhone(Phone p){
-        phones.add(new Phone(id++, p.getName(), p.getPrice(), p.getAmount()));
+        p.setId(id++);
+        phones.add(p);
     }
 }

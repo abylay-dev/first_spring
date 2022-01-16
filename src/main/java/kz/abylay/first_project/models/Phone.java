@@ -10,7 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Phone implements Serializable {
-    private int id;
+    private Integer id;
     private String name;
     private int price;
     private int amount;
