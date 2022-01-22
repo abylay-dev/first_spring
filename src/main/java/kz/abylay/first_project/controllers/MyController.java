@@ -26,6 +26,7 @@ public class MyController {
         /*if (error==null){
             model.addAttribute("error", "No input data");
         }*/
+        model.addAttribute("title", "Add phone");
         return "addPhone";
     }
 
