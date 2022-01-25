@@ -40,7 +40,7 @@ public class MyController {
         //int price = Integer.parseInt(request.getParameter("phone_price"));
         if (name.equals("No item")){
             /*return "redirect:/add?error=1";*/
-            return "redirect:/errorpage";
+            return "redirect:/errorpage/404";
         }
         DBManager.addPhone(new Phone(null, name, price, amount));
         return "redirect:/add";
@@ -52,6 +52,9 @@ public class MyController {
     ){
 //        int id = request.getParameter("id");
         Phone p = DBManager.getThePhone(id);
+        if (p == null){
+            return "redirect:/errorpage/500";
+        }
         model.addAttribute("phone", p);
         return "edit";
     }
@@ -66,8 +69,13 @@ public class MyController {
         return "redirect:/";
     }
 
-    @GetMapping("/errorpage")
-    public String getError(Model model){
+    @GetMapping("/errorpage/{error_id}") /* {error_id} = 500 */
+    public String getError(Model model, @PathVariable(name = "error_id") int errorID){
+        if (errorID==500){
+            model.addAttribute("error", "500 ITEM NOT FOUND");
+        }else if (errorID==404){
+            model.addAttribute("error", "404 PAGE NOT FOUND");
+        }
         return "error_page";
     }
 }
