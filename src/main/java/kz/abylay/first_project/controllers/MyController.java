@@ -1,25 +1,50 @@
 package kz.abylay.first_project.controllers;
 
+import groovy.transform.AutoImplement;
 import kz.abylay.first_project.models.Phone;
+
+import kz.abylay.first_project.service.PhoneService;
+import kz.abylay.first_project.service.impl.PhoneServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import kz.abylay.first_project.repository.DBManager;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @Controller
 public class MyController {
 
-    @GetMapping("/")
+    private PhoneService service;
+
+    @Autowired
+    public MyController(PhoneService service) {
+        this.service = service;
+    }
+
+    @GetMapping
     public String getIndex(Model model){
-        List<Phone> phones = DBManager.getPhones();
+        List<Phone> phones = service.getAllPhones();
         model.addAttribute("title", "Home");
         model.addAttribute("items", phones);
+        /*p.setName("Xiaomi");
+        model.addAttribute("phone", p);*/
         return "first_page";
     }
+
+    /*@GetMapping(value = "/smartphones")
+    public List<Phone> getPhones(){
+        return DBManager.getPhones();
+    }
+
+    @PostMapping(value = "/phone")
+    public boolean phone(@RequestBody Phone p){
+        System.out.println(p.toString());
+        DBManager.addPhone(p);
+        return p != null;
+
+    }*/
 
     @GetMapping("/add")
     public String getAddPhonePage(Model model/*, @RequestParam(name="error") String error*/){
@@ -42,7 +67,7 @@ public class MyController {
             /*return "redirect:/add?error=1";*/
             return "redirect:/errorpage/404";
         }
-        DBManager.addPhone(new Phone(null, name, price, amount));
+        service.addPhone(new Phone(null, name, price, amount));
         return "redirect:/add";
     }
     ///edit/1
@@ -51,7 +76,7 @@ public class MyController {
         @PathVariable(name="idshka") int id, Model model
     ){
 //        int id = request.getParameter("id");
-        Phone p = DBManager.getThePhone(id);
+        Phone p = service.getPhone(id);
         if (p == null){
             return "redirect:/errorpage/500";
         }
@@ -65,7 +90,7 @@ public class MyController {
                        @RequestParam(name = "phone_price", defaultValue = "0") int price,
                        @RequestParam(name = "phone_amount", defaultValue = "0") int amount
     ){
-        DBManager.updatePhone(id, name, price, amount);
+        service.editPhone(id, new Phone(id, name, price, amount));
         return "redirect:/";
     }
 
