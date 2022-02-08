@@ -1,15 +1,12 @@
 package kz.abylay.first_project.controllers;
 
-import groovy.transform.AutoImplement;
 import kz.abylay.first_project.models.Phone;
 
 import kz.abylay.first_project.service.PhoneService;
-import kz.abylay.first_project.service.impl.PhoneServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import kz.abylay.first_project.repository.DBManager;
 
 import java.util.List;
 

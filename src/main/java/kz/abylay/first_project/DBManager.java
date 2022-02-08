@@ -1,4 +1,4 @@
-package kz.abylay.first_project.repository;
+package kz.abylay.first_project;
 
 import kz.abylay.first_project.models.Phone;
 import org.springframework.stereotype.Repository;

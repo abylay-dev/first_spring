@@ -24,6 +24,9 @@ public class Phone implements Serializable {
     @Column(name = "name", length = 100)
     private String name;
 
+    @Column(name = "price")
     private int price;
+
+    @Column(name = "amount")
     private int amount;
 }

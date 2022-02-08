@@ -9,4 +9,5 @@ public interface PhoneService {
     Phone getPhone(int id);
     boolean addPhone(Phone p);
     boolean editPhone(int id, Phone p);
+    void deletePhone(Phone p);
 }
