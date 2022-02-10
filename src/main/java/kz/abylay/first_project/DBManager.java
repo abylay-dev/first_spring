@@ -12,12 +12,12 @@ public class DBManager {
     private List<Phone> phones = new ArrayList<>();
     private int id = 1;
 
-    @PostConstruct
+    /*@PostConstruct
     public void myInit() {
         phones.add(new Phone(id++, "iPhone 13", 500000, 25));
         phones.add(new Phone(id++, "Xiaomi Redmi 4x", 70000, 10));
         phones.add(new Phone(id++, "Samsung A52", 220000, 16));
-    }
+    }*/
 
     public List<Phone> getPhones(){
         return phones;

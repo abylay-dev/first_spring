@@ -19,6 +19,12 @@
                     <input type="number" name="phone_amount" class="form-control">
                 </div>
                 <div class="form-group mt-3">
+                    <label th:text="#{label.country}"></label>
+                    <select class="form-control" name="country_id">
+                        <option th:each="country : ${countries}" th:text="${country.name} + ' / ' + ${country.ticker}" th:value="${country.id}"></option>
+                    </select>
+                </div>
+                <div class="form-group mt-3">
                     <button class="btn btn-success">ADD PHONE</button>
                 </div>
             </form>

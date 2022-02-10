@@ -1,7 +1,9 @@
 package kz.abylay.first_project.controllers;
 
+import kz.abylay.first_project.models.Country;
 import kz.abylay.first_project.models.Phone;
 
+import kz.abylay.first_project.service.CountryService;
 import kz.abylay.first_project.service.PhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,16 +15,19 @@ import java.util.List;
 @Controller
 public class MyController {
 
-    private PhoneService service;
+    private PhoneService phoneService;
 
     @Autowired
     public MyController(PhoneService service) {
-        this.service = service;
+        this.phoneService = service;
     }
+
+    @Autowired
+    private CountryService countryService;
 
     @GetMapping
     public String getIndex(Model model){
-        List<Phone> phones = service.getAllPhones();
+        List<Phone> phones = phoneService.getAllPhones();
         model.addAttribute("title", "Home");
         model.addAttribute("items", phones);
         /*p.setName("Xiaomi");
@@ -48,6 +53,7 @@ public class MyController {
         /*if (error==null){
             model.addAttribute("error", "No input data");
         }*/
+        model.addAttribute("countries", countryService.getAllCountries());
         model.addAttribute("title", "Add phone");
         return "addPhone";
     }
@@ -56,7 +62,8 @@ public class MyController {
     public String addPhone(/*HttpServletRequest request,*/
                 @RequestParam(name = "phone_name", defaultValue = "No item") String name,
                @RequestParam(name = "phone_price", defaultValue = "0") int price,
-               @RequestParam(name = "phone_amount", defaultValue = "0") int amount
+               @RequestParam(name = "phone_amount", defaultValue = "0") int amount,
+               @RequestParam(name = "country_id", defaultValue = "-1") int country_id
     ){
         //String name = request.getParameter("phone_name");
         //int price = Integer.parseInt(request.getParameter("phone_price"));
@@ -64,7 +71,10 @@ public class MyController {
             /*return "redirect:/add?error=1";*/
             return "redirect:/errorpage/404";
         }
-        service.addPhone(new Phone(null, name, price, amount));
+        Country country = countryService.getCountry(country_id);
+        if(country != null) {
+            phoneService.addPhone(new Phone(null, name, price, amount, country));
+        }
         return "redirect:/add";
     }
     ///edit/1
@@ -73,7 +83,7 @@ public class MyController {
         @PathVariable(name="idshka") int id, Model model
     ){
 //        int id = request.getParameter("id");
-        Phone p = service.getPhone(id);
+        Phone p = phoneService.getPhone(id);
         if (p == null){
             return "redirect:/errorpage/500";
         }
@@ -87,7 +97,7 @@ public class MyController {
                        @RequestParam(name = "phone_price", defaultValue = "0") int price,
                        @RequestParam(name = "phone_amount", defaultValue = "0") int amount
     ){
-        service.editPhone(id, new Phone(id, name, price, amount));
+        //service.editPhone(id, new Phone(id, name, price, amount));
         return "redirect:/";
     }
 

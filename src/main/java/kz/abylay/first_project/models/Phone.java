@@ -29,4 +29,7 @@ public class Phone implements Serializable {
 
     @Column(name = "amount")
     private int amount;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Country country;
 }
