@@ -1,18 +1,17 @@
 <div xmlns:th="http://www.thymeleaf.org"
      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
      layout:decorate="~{layout/main.html}" layout:fragment="site_content">
- <!--   <div>-->
     <div class="row mt-5">
         <div class="col-sm-6 offset-3">
             <h1>Change</h1>
-            <form th:action="@{'/editPhone/'+${phone.getId()}}" th:object="${phone}" method="post">
+            <form th:action="@{'/editPhone/'+${item.getId()}}" th:object="${item}" method="post">
                 <div class="form-group mt-3">
                     <label>Name : </label>
-                    <input type="text" name="phone_name" class="form-control" th:value="${phone.getName()}">
+                    <input type="text" name="phone_name" class="form-control" th:value="${item.getName()}">
                 </div>
                 <div class="form-group mt-3">
                     <label>Price : </label>
-                    <input type="number" name="phone_price" class="form-control" th:value="${phone.getPrice()}">
+                    <input type="number" name="phone_price" class="form-control" th:value="${item.getPrice()}">
                 </div>
                 <div class="form-group mt-3">
                     <label>Amount : </label>
@@ -24,5 +23,37 @@
             </form>
         </div>
     </div>
-    <!--</div>-->
+
+    <div class="row mt-5">
+        <div class="col-sm-6 offset-3">
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr th:each="category : ${item.categories}">
+                        <td th:text="${category.name}"></td>
+                        <td width="10%">
+                            <button class="btn btn-danger btn-sm"> - </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-sm-6 offset-3">
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr th:each="category : ${categories}" th:if="${!item.categories.contains(category)}">
+                        <form th:action="@{'/assigncategory'}" method="post">
+                            <input type="hidden" th:value="${item.id}" name="item_id">
+                            <input type="hidden" th:value="${category.id}" name="category_id">
+                            <td th:text="${category.name}"></td>
+                            <td width="10%">
+                                <button class="btn btn-success btn-sm"> + </button>
+                            </td>
+                        </form>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

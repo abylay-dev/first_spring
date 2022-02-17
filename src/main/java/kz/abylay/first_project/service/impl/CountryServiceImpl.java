@@ -1,7 +1,6 @@
 package kz.abylay.first_project.service.impl;
 
 import kz.abylay.first_project.models.Country;
-import kz.abylay.first_project.models.Phone;
 import kz.abylay.first_project.repository.CountryRepository;
 import kz.abylay.first_project.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,47 +1,54 @@
 package kz.abylay.first_project.controllers;
 
+import kz.abylay.first_project.models.Categories;
 import kz.abylay.first_project.models.Country;
-import kz.abylay.first_project.models.Phone;
+import kz.abylay.first_project.models.Items;
 
+import kz.abylay.first_project.service.CategoriesService;
 import kz.abylay.first_project.service.CountryService;
-import kz.abylay.first_project.service.PhoneService;
+import kz.abylay.first_project.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class MyController {
 
-    private PhoneService phoneService;
+    private ItemService itemService;
 
     @Autowired
-    public MyController(PhoneService service) {
-        this.phoneService = service;
+    public MyController(ItemService service) {
+        this.itemService = service;
     }
 
     @Autowired
     private CountryService countryService;
 
+    @Autowired
+    private CategoriesService categoriesService;
+
+
     @GetMapping
     public String getIndex(Model model){
-        List<Phone> phones = phoneService.getAllPhones();
+        List<Items> items = itemService.getAllPhones();
         model.addAttribute("title", "Home");
-        model.addAttribute("items", phones);
+        model.addAttribute("items", items);
         /*p.setName("Xiaomi");
         model.addAttribute("phone", p);*/
         return "first_page";
     }
 
     /*@GetMapping(value = "/smartphones")
-    public List<Phone> getPhones(){
+    public List<Items> getPhones(){
         return DBManager.getPhones();
     }
 
     @PostMapping(value = "/phone")
-    public boolean phone(@RequestBody Phone p){
+    public boolean phone(@RequestBody Items p){
         System.out.println(p.toString());
         DBManager.addPhone(p);
         return p != null;
@@ -60,9 +67,9 @@ public class MyController {
 
     @PostMapping(value = "/addPhone")
     public String addPhone(/*HttpServletRequest request,*/
-                @RequestParam(name = "phone_name", defaultValue = "No item") String name,
-               @RequestParam(name = "phone_price", defaultValue = "0") int price,
-               @RequestParam(name = "phone_amount", defaultValue = "0") int amount,
+                @RequestParam(name = "item_name", defaultValue = "No item") String name,
+               @RequestParam(name = "item_price", defaultValue = "0") int price,
+               @RequestParam(name = "item_amount", defaultValue = "0") int amount,
                @RequestParam(name = "country_id", defaultValue = "-1") int country_id
     ){
         //String name = request.getParameter("phone_name");
@@ -73,7 +80,7 @@ public class MyController {
         }
         Country country = countryService.getCountry(country_id);
         if(country != null) {
-            phoneService.addPhone(new Phone(null, name, price, amount, country));
+            itemService.addPhone(new Items(null, name, price, amount, country, null));
         }
         return "redirect:/add";
     }
@@ -83,21 +90,22 @@ public class MyController {
         @PathVariable(name="idshka") int id, Model model
     ){
 //        int id = request.getParameter("id");
-        Phone p = phoneService.getPhone(id);
+        Items p = itemService.getPhone(id);
         if (p == null){
             return "redirect:/errorpage/500";
         }
-        model.addAttribute("phone", p);
+        model.addAttribute("item", p);
+        model.addAttribute("categories", categoriesService.getAllCategories());
         return "edit";
     }
 
     @PostMapping(value = "/editPhone/{idshka}")
     public String edit(@PathVariable(name="idshka") int id,
-                       @RequestParam(name = "phone_name", defaultValue = "No item") String name,
-                       @RequestParam(name = "phone_price", defaultValue = "0") int price,
-                       @RequestParam(name = "phone_amount", defaultValue = "0") int amount
+                       @RequestParam(name = "item_name", defaultValue = "No item") String name,
+                       @RequestParam(name = "item_price", defaultValue = "0") int price,
+                       @RequestParam(name = "item_amount", defaultValue = "0") int amount
     ){
-        //service.editPhone(id, new Phone(id, name, price, amount));
+        //service.editPhone(id, new Items(id, name, price, amount));
         return "redirect:/";
     }
 
@@ -109,5 +117,26 @@ public class MyController {
             model.addAttribute("error", "404 PAGE NOT FOUND");
         }
         return "error_page";
+    }
+
+    @PostMapping("/assigncategory")
+    public String assignCategory(@RequestParam(name = "item_id")int itemID,
+                                 @RequestParam(name = "category_id")int categoryID){
+        Categories category = categoriesService.getCategory(categoryID);
+        if (category!=null){
+            Items item = itemService.getPhone(itemID);
+            if (item!=null){
+                List<Categories> categories = item.getCategories();
+                if(categories==null){
+                    categories = new ArrayList<>();
+                }
+                categories.add(category);
+                boolean tf = itemService.editPhone(item);
+                if (tf){
+                    return "redirect:/edit/" + itemID;
+                }
+            }
+        }
+        return "redirect:/";
     }
 }

@@ -12,6 +12,7 @@
                             <th scope="col">Price</th>
                             <th scope="col">Count</th>
                             <th scope="col">Country</th>
+                            <th scope="col">Categories</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -22,6 +23,9 @@
                             <td th:text="${it.getPrice()} + ' KZT'">...</td>
                             <td th:text="${it.getAmount()}">...</td>
                             <td th:text="${it.country.ticker}">...</td>
+                            <td>
+                                <span th:each="cat : ${it.categories}" th:text="${cat.name}" style="display: block;"></span>
+                            </td>
                             <td>
                                 <a th:href="@{'/edit/' + ${it.id}}" class="btn btn-info btn-sm" th:text="#{button.edit}"></a>
                             </td>

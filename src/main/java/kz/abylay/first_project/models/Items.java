@@ -8,17 +8,17 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
 @Entity
-@Table(name = "telefony")
-public class Phone implements Serializable {
+public class Items implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "iphone_id")
+//    @Column(name = "iphone_id")
     private Integer id;
 
     @Column(name = "name", length = 100)
@@ -32,4 +32,7 @@ public class Phone implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Country country;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Categories> categories;
 }
